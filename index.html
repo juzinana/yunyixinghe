@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云熠星河🌌 关于云熠知多少</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth; /* 平滑滚动（分页滑动） */
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
+            background: linear-gradient(#10142c, #1a2349);
+            color: #f0f4ff;
+            line-height: 1.8;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        /* 粒子背景容器 */
+        #particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.7;
+        }
+        /* 封面海报 */
+        .cover {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background: rgba(10, 14, 33, 0.85);
+            z-index: 1;
+        }
+        .cover-img {
+            width: 90%;
+            max-width: 500px;
+            max-height: 55vh;
+            object-fit: contain;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(105, 177, 255, 0.3);
+        }
+        .cover-title {
+            font-size: 28px;
+            color: #c7e0ff;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(148, 200, 255, 0.6);
+        }
+        .cover-subtitle {
+            font-size: 16px;
+            color: #94c8ff;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .down-btn {
+            width: 40px;
+            height: 70px;
+            border: 2px solid #94c8ff;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: downMove 1.5s infinite;
+            cursor: pointer;
+        }
+        .down-btn::after {
+            content: "";
+            width: 8px;
+            height: 15px;
+            background: #94c8ff;
+            border-radius: 4px;
+        }
+        @keyframes downMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+        /* 主体内容容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 30px 15px 50px;
+        }
+        /* 分页标题 */
+        .page-title {
+            text-align: center;
+            font-size: 22px;
+            color: #c7e0ff;
+            margin: 40px 0 25px;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        .page-title::after {
+            content: "";
+            width: 60px;
+            height: 2px;
+            background: #69b1ff;
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 内容模块 */
+        .block {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+        }
+        .block h3 {
+            color: #94c8ff;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-left: 3px solid #69b1ff;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-row {
+            font-size: 15px;
+            margin: 8px 0;
+            padding: 2px 0;
+        }
+        a {
+            color: #82c9ff;
+            text-decoration: none;
+            word-break: break-all;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #c7e0ff;
+            text-decoration: underline;
+        }
+        .desc {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 10px 0;
+            padding-left: 5px;
+        }
+        /* 照片画廊 */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .photo-gallery.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .photo-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .photo-gallery img:hover {
+            transform: scale(1.03);
+        }
+        .photo-single {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .photo-single img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+        }
+        .photo-full {
+            margin: 15px 0;
+        }
+        .photo-full img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+        }
+        /* 适配小屏幕 */
+        @media (max-width: 480px) {
+            .cover-img {
+                max-height: 42vh;
+                max-width: 95%;
+            }
+            .cover-title {
+                font-size: 24px;
+            }
+            .page-title {
+                font-size: 20px;
+            }
+            .block {
+                padding: 16px;
+            }
+            .info-row {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 粒子背景（星空飘落动效） -->
+    <div id="particle-container"></div>
+
+<!-- 封面页（带美图） -->
+    <div class="cover">
+<!-- 美图占位：替换src里的链接为你的爱豆美图，建议用竖版适配手机 -->
+        <img src="photo/直播比心.jpg" alt="云熠星河封面" class="cover-img">
+        <h1 class="cover-title">云熠星河🌌 关于云熠知多少</h1>
+        <p class="cover-subtitle">小星河与你共赴，见证每一份闪耀</p>
+        <div class="down-btn" onclick="document.getElementById('page1').scrollIntoView()"></div>
+    </div>
+
+    <!-- 主体内容（分页滑动，点击向下按钮跳转） -->
+    <div class="container">
+        <!-- 分页1：基本资料 -->
+        <div id="page1">
+            <h2 class="page-title">☆ 基本资料 ☆</h2>
+            <div class="block">
+                <h3>👤 艺人基础信息</h3>
+                <div class="info-row">姓名：云旗 <a href="http://t.cn/A6eippUd">http://t.cn/A6eippUd</a> 🌌 郝熠然 <a href="http://t.cn/A6G8GOS0">http://t.cn/A6G8GOS0</a></div>
+                <div class="info-row">籍贯：湖北武汉 🌌 山东菏泽</div>
+                <div class="info-row">生日：2002年08月11日 🌌 1995年09月12日</div>
+                <div class="info-row">星座：狮子座 🌌 处女座</div>
+                <div class="info-row">身高：186cm 🌌 184cm</div>
+                <div class="info-row">毕业院校：北京服装学院 🌌 北京电影学院/山东建筑大学</div>
+                <div class="info-row">MBTI：ENTJ 🌌 生活中INFP 工作中ENFJ</div>
+                
+                <h3 style="margin-top:15px;">🎨 专属应援信息（艺人亲自选择）</h3>
+                <div class="info-row">CP应援色：旗熠青 <a href="http://t.cn/AX4wbP2G">http://t.cn/AX4wbP2G</a></div>
+                <div class="info-row">CP名：云熠星河 #云熠星河[超话]#</div>
+                <div class="info-row">CP粉丝名：小星河 <a href="http://t.cn/AXy11ZcN">http://t.cn/AXy11ZcN</a></div>
+                <div class="info-row">经纪公司：@和光MEDIA</div>
+            </div>
+            <div class="block">
+                <h3>📷 艺人图集</h3>
+                <div class="photo-gallery">
+                    <img src="photo/红白玫瑰跪姿.jpg" alt="艺人照片1" loading="lazy">
+                    <img src="photo/剧宣.jpg" alt="艺人照片2" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页2：官方账号 -->
+        <div id="page2">
+            <h2 class="page-title">☆ 官方账号 ☆</h2>
+            <div class="block">
+                <h3>📱 全平台官方账号</h3>
+                <div class="info-row">个人微博：@云旗Yunqi 🌌 @郝熠然</div>
+                <div class="info-row">抖音：云熠小世界（dy号：50781790369）</div>
+                <div class="info-row">小红书：云熠小世界（xhs号：42070676433）</div>
+                <div class="photo-single">
+                    <img src="photo/小世界.jpg" alt="云熠小世界" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+       <!-- 分页3：作品相关 -->
+        <div id="page3">
+            <h2 class="page-title">🎦 光影瞬间</h2>
+            <div class="block">
+                <h3>📺 影视作品</h3>
+                <div class="info-row">在播作品：《52 》饰樊霄 🌌 《52》饰游书朗</div>
+                <div class="info-row">待播作品：《52番外》饰樊霄 🌌 《52番外》饰游书朗</div>
+                <div class="photo-gallery">
+                    <img src="photo/直播猫耳朵.jpg" alt="直播猫耳朵" loading="lazy">
+                    <img src="photo/1.22直播.jpg" alt="1.22直播" loading="lazy">
+                </div>
+
+                <h3 style="margin-top:15px;">📖 时尚杂志</h3>
+                <div class="info-row"><a href="http://t.cn/AX4ewC9i">WINK_MAG</a></div>
+                <div class="info-row"><a href="http://t.cn/AXG3ZmCq">红秀《GRAZIA YOUNG》</a></div>
+                <div class="photo-gallery three">
+                    <img src="photo/卡姿兰出发图.jpg" alt="卡姿兰出发图" loading="lazy">
+                    <img src="photo/环球.jpg" alt="环球" loading="lazy">
+                    <img src="photo/捏脸.jpg" alt="捏脸" loading="lazy">
+                </div>
+            </div>
+
+            <h2 class="page-title">🎶 动人旋律</h2>
+            <div class="block">
+                <h3>🎧 合唱作品</h3>
+                <div class="info-row">▶️ 溺于业火 - 云旗/郝熠然</div>
+                <div class="info-row">▶️ 妄念 - 云旗/郝熠然</div>
+                <div class="photo-gallery">
+                    <img src="photo/戳脸.jpg" alt="戳脸" loading="lazy">
+                    <img src="photo/嘉辉可爱.jpg" alt="嘉辉可爱" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页4：后援会职能组 -->
+        <div id="page4">
+            <h2 class="page-title">☆ 官方账号介绍 ☆</h2>
+            <div class="block">
+                <div class="info-row"><a href="http://t.cn/AXUTmeil">http://t.cn/AXUTmeil</a></div>
+                
+                <div class="desc" style="margin:10px 0;">
+                    1️⃣@云熠引力场 专注于@云旗Yunqi @郝熠然 ，协同所有职能组一起为两位老师的星路保驾护航。致力于成为他们一路前行的不竭动力，更是每一位小星河最坚固的信号站。
+                </div>
+                <div class="info-row">无门槛粉丝群1：<a href="http://t.cn/AXUdOiAA">http://t.cn/AXUdOiAA</a></div>
+                <div class="info-row">无门槛粉丝群2：<a href="http://t.cn/AX4h6dk2">http://t.cn/AX4h6dk2</a></div>
+                <div class="info-row">无门槛粉丝群3：<a href="http://t.cn/AX48yYeW">http://t.cn/AX48yYeW</a></div>
+                <div class="info-row">无门槛粉丝群4：<a href="http://t.cn/AXbsyVFb">http://t.cn/AXbsyVFb</a></div>
+                <div class="info-row">各项数据教程：<a href="http://t.cn/AX4XMMpd">http://t.cn/AX4XMMpd</a></div>
+
+                <div class="desc" style="margin-top:15px;">
+                    2️⃣@云熠星河动力组（数据组）：负责各项数据维护、加热等。
+                </div>
+                <div class="info-row">超like互助：<a href="http://t.cn/AX4ZFwIV">http://t.cn/AX4ZFwIV</a></div>
+                <div class="info-row">超话爬楼：<a href="http://t.cn/AX45Qic1">http://t.cn/AX45Qic1</a></div>
+                <div class="info-row">数据群1：<a href="http://t.cn/AX45QA3G">http://t.cn/AX45QA3G</a></div>
+                <div class="info-row">数据群2：<a href="http://t.cn/AX4OBwoA">http://t.cn/AX4OBwoA</a></div>
+
+                <div class="desc" style="margin-top:15px;">
+                    3️⃣@云熠星河护盾组（反黑组）：舆论监督、反黑、净化等。
+                </div>
+                <div class="info-row">咔黑：<a href="http://t.cn/AX45nXh2">http://t.cn/AX45nXh2</a></div>
+
+                <div class="desc" style="margin-top:15px;">
+                    4️⃣@云熠星河揽巡组（超管组）：超话相关事务管理。
+                </div>
+                <div class="info-row"><a href="http://t.cn/AX4avQPE">http://t.cn/AX4avQPE</a></div>
+                <div class="info-row"><a href="http://t.cn/AX49OVfr">http://t.cn/AX49OVfr</a></div>
+
+                <div class="desc" style="margin-top:15px;">
+                    5️⃣@云熠星河航迹组（网宣组）：负责网络宣传等
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 粒子动效脚本（星空飘落，无需修改） -->
+    <script>
+        // 粒子背景生成
+        const particleContainer = document.getElementById('particle-container');
+        const particleCount = 80; // 粒子数量，可调整
+        const colors = ['#94c8ff', '#c7e0ff', '#82c9ff', '#69b1ff']; // 应援色系粒子
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            // 随机粒子大小
+            const size = Math.random() * 4 + 1;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            // 随机颜色
+            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            // 随机初始位置
+            particle.style.position = 'absolute';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            // 圆角
+            particle.style.borderRadius = '50%';
+            // 随机透明度
+            particle.style.opacity = Math.random() * 0.8 + 0.2;
+            // 随机飘落速度和方向
+            const speed = Math.random() * 1 + 0.5;
+            const direction = Math.random() * 2 - 1; // -1到1，左右偏移
+
+            // 飘落动画
+            function moveParticle() {
+                let top = parseFloat(particle.style.top);
+                let left = parseFloat(particle.style.left);
+                // 向下移动
+                top += speed;
+                // 左右偏移
+                left += direction * 0.2;
+                // 超出屏幕重置
+                if (top > 100) {
+                    top = -10;
+                    left = Math.random() * 100;
+                }
+                particle.style.top = `${top}%`;
+                particle.style.left = `${left}%`;
+                requestAnimationFrame(moveParticle);
+            }
+            moveParticle();
+            particleContainer.appendChild(particle);
+        }
+
+        // 分页滑动优化：点击页面空白处向下滚动
+        document.addEventListener('click', function(e) {
+            const cover = document.querySelector('.cover');
+            const downBtn = document.querySelector('.down-btn');
+            // 点击封面（除了向下按钮）不触发
+            if (e.target === cover || e.target === cover.querySelector('.cover-img') || e.target === cover.querySelector('.cover-title') || e.target === cover.querySelector('.cover-subtitle')) {
+                return;
+            }
+            // 点击向下按钮或主体内容，向下滚动到下一页
+            const currentPage = document.querySelector(':target') || document.getElementById('page1');
+            const nextPage = currentPage.nextElementSibling;
+            if (nextPage && nextPage.id) {
+                nextPage.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                // 最后一页，滚动回顶部
+                document.querySelector('.cover').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
